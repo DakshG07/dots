@@ -6,4 +6,7 @@ nodepath.vim
 autoload/plugged/*
 session
 general/paths.vim
-
+plugged/**
+vim-plug/**
+vscode/**
+utils/**

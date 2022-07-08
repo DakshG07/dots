@@ -7,7 +7,7 @@
 
 
 " Load in NS STRYDE plugin
-source D:\Coding Projects\Smooth\smooth\plugin\neovim-calculator.vim
+" source D:\Coding Projects\Smooth\smooth\plugin\neovim-calculator.vim
 call plug#begin()
     " Appearance
     Plug 'feline-nvim/feline.nvim'
