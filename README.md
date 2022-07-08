@@ -1,142 +1,18 @@
-# Nvim Mach 2
+# Dukk's Neovim Config
 
-![Nvim Mach 2 pic](./utils/images/nvim.png)
+These are my dotfiles. Just what I use daily, nothing fancy. Probably some bad practices and annoying defaults.
 
-## Install in one command
+I currently use `Wezterm` as my editor of choice simply because it's fast, extensible, and customizable. In other words, everything I need. 
+If you don't like anything here, feel free to change it. I often work with defaults simply because they work fine for me. You do you.
+If you have a plugin which you feel is really cool and totally necessary, reach out via a PR!
+This is meant to be used with a line size of `1.4` in Wezterm. This may not be the same for all editors. The value `1.4` simply means that all of my lines are scaled up by 40%. For me, this creates an interesting and satisfying effect.
+There's also a font config for Neovide which sets the font to **Cascadia Code**.
+Currently, the fonts I use are **MonoLisa**(paid) and **Cascadia Code**. Feel free to use your own fonts.
+## Installation
+Simply put this in your Neovim config folder and let the magic happen!
 
-The following will install this config if you have an existing config it will move it to `~/.config/nvim.old`
-
-This script only supports Mac, Ubuntu and Arch
-
-```
-bash <(curl -s https://raw.githubusercontent.com/ChristianChiarulli/nvim/master/utils/install.sh)
-```
-
-## Install Neovim
-
-- On Mac
-
-  ```
-  brew install neovim
-  ```
-
-- Ubuntu
-
-  ```
-  sudo apt install neovim
-  ```
-
-- Arch
-
-  ```
-  sudo pacman -S neovim
-  ```
-
-## Clone this repo into your config
-
-```
-git clone https://github.com/ChristianChiarulli/nvim.git ~/.config/nvim
-```
-
-## Install python & node support
-
-```
-pip install pynvim
-```
-
-```
-npm i -g neovim
-```
-
-## Install Neovim remote
-
-```
-pip install neovim-remote
-```
-
-This will install `nvr` to `~/.local/bin` so you will need to add the following to your `bashrc` or `zshrc`
-
-```
-export PATH=$HOME/.local/bin:$PATH
-```
-
-## Install clipboard support
-
-- On mac pbcopy should be builtin
-
-- On Ubuntu
-
-  ```
-  sudo apt install xsel
-  ```
-
-- On Arch Linux
-
-  ```
-  sudo pacman -S xsel
-  ```
-
-## (Optional) Install python & node support using virtual environments
-
-Make sure to add these paths somewhere in your config
-
-```
-let g:python3_host_prog = expand("<path to python with pynvim installed>")
-let g:python3_host_prog = expand("~/.miniconda/envs/neovim/bin/python3.8") " <- example
-
-let g:node_host_prog = expand("<path to node with neovim installed>")
-let g:node_host_prog = expand("~/.nvm/versions/node/v12.16.1/bin/neovim-node-host") " <- example
-```
-
-## List of programs you should install
-
-- ranger
-- ueberzug
-- ripgrep
-- silver_searcher
-- fd
-- universal-ctags
-- lazy git
-- lazy docker
-
-Explanations and installation instruction can be found on my blog
-
-## Language Servers
-
-Since CoC doesn't support all languages in there extensions
-I recommend installing some language servers from scratch
-and adding them to your `coc-settings.json` file
-
-Example:
-
-- bash
-
-  `npm i -g bash-language-server`
-
-  ```
-  "languageserver": {
-  "bash": {
-    "command": "bash-language-server",
-    "args": ["start"],
-    "filetypes": ["sh"],
-    "ignoredRootPaths": ["~"]
-    }
-  }
-  ```
-
-## TODO
-
-- People asked about vimwiki I kinda hate it but maybe I'll add it
-- float term lazy git
-- spectre, or async task/run
-- setup custom paths
-- install script envsubst is your friend
-- add better whitespace plugin and a toggle, video about clean code maybe
-- snippets (coc snippets)
-- git messenger
-- neovide
-- setup global coc extensions to auto install
-
-## VSCode integration
-
-We will be integrating with VSCode using [this](https://github.com/asvetliakov/vscode-neovim)
+**Warning: This will delete any existing neovim configs.**
+## Some advice
+I'm not one to really be *giving* advice, but I really do believe that making your own configs can be a learning experience. Rather than split this config up, which *would* be the responsible thing to do, I've left it all in one file. Any beginners with Neovim should take the time to research all of these plugins. Personally, I got started by seeing which plugins others used, and adding those into my config until it became fully-fledged. Don't be afraid to ask for advice!
+## Credit
+Thanks to [winston](https://github.com/nekowinston) for his help on Discord. A lot of this config wouldn't be possible(or just would be a lot harder) without him.
