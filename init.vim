@@ -6,13 +6,13 @@
 " Dukk's Opiniated Neovim Config
 
 
-" Load in NS STRYDE plugin
-" source D:\Coding Projects\Smooth\smooth\plugin\neovim-calculator.vim
 call plug#begin()
     " Appearance
     Plug 'feline-nvim/feline.nvim'
     Plug 'ryanoasis/vim-devicons' " Icons
+    Plug 'kyazdani42/nvim-web-devicons' " Also icons
     Plug 'catppuccin/nvim', {'as': 'catppuccin'} " Best theme
+
     
     " Utilities
     Plug 'sheerun/vim-polyglot' "  Nice
@@ -23,6 +23,9 @@ call plug#begin()
     Plug 'romgrk/barbar.nvim'
     Plug 'nvim-telescope/telescope.nvim' " I mean...it's telescope!
     Plug 'ur4ltz/surround.nvim'          " Really useful plugin...maybe I should move it down there.
+    Plug 'https://github.com/folke/which-key.nvim' " Which-key because no one can remember everything.
+    Plug 'D:\Coding Projects\kak.nvim\plugin\kak.nvim.vim' " Kak plugin
+    Plug 'vimwiki/vimwiki ' " Nice tool
 
     " Some Useful Things
     Plug 'andweeb/presence.nvim'   " Discord RPC
@@ -35,9 +38,11 @@ call plug#begin()
 
 
     " LSP & related
-    Plug 'williamboman/nvim-lsp-installer'
+    Plug 'williamboman/mason.nvim'
+    Plug 'neovim/nvim-lspconfig'
     Plug 'neovim/nvim-lspconfig'
     Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
+    Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim', { 'branch': 'main' } " Just kinda cool to have
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'               " completion from buffers
     Plug 'hrsh7th/cmp-path'                 " completion from paths
@@ -66,13 +71,18 @@ set number
 set encoding=utf-8
 set relativenumber
 set mouse=n
+set tm=0 " Personal preference
 let NERDTreeShowHidden=1
 let g:neovide_cursor_vfx_mode = "ripple"
+let g:catppuccin_flavour = "mocha"
 nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>ev :e $MYVIMRC<CR>
 nnoremap <leader><space><space> :NvimTreeFocus<CR>
 nnoremap <leader>tt :vert terminal<CR>
 nnoremap <leader>n :res 0<CR>
 nnoremap <leader>m :res 10<CR>
+nnoremap C-j <Down>
+nnoremap C-k <Up>
 " Telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -125,6 +135,20 @@ nnoremap <silent> <Space>bd <Cmd>BufferOrderByDirectory<CR>
 nnoremap <silent> <Space>bl <Cmd>BufferOrderByLanguage<CR>
 nnoremap <silent> <Space>bw <Cmd>BufferOrderByWindowNumber<CR>
 lua << END
+-- Lsp Autocomplete
+
+-- LSP Lines setup 
+require("lsp_lines").setup()
+vim.diagnostic.config({
+    virtual_text = false,
+})
+
+-- Mason setup
+require("mason").setup()
+
+-- Which key setup
+require("which-key").setup()
+
 -- Dashboard config
 local db = require("dashboard")
 
@@ -262,7 +286,7 @@ require("catppuccin").setup({
       
 }})
 require('feline').setup({
-    components = require('catppuccin.core.integrations.feline'),
+   components = require('catppuccin.core.integrations.feline'),
 })
 require("nvim-tree").setup()
 require("presence"):setup({
@@ -271,7 +295,18 @@ require("presence"):setup({
     neovim_image_text = "The GigaChad Text Editor",
     main_image = "file", -- Main image display (either "neovim" or "file")
     blacklist = {}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
-    buttons = false, -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
+    buttons = function(buffer, repo_url)
+        if repo_url == nil then
+            return false
+        end
+
+        return {
+            {
+                    label = "Steal like an artist",
+                    url = repo_url,
+            }
+        }
+    end,
     debounce_timeout = 10, -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
     file_assets = {
         yaml = { "Kubernetes", "https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png" },
@@ -299,8 +334,8 @@ snippet = {
   end,
 },
 window = {
-  -- completion = cmp.config.window.bordered(),
-  -- documentation = cmp.config.window.bordered(),
+  completion = cmp.config.window.bordered(),
+  documentation = cmp.config.window.bordered(),
 },
 mapping = cmp.mapping.preset.insert({
   ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -310,6 +345,7 @@ mapping = cmp.mapping.preset.insert({
   ["<Tab>"] = cmp.mapping.confirm({ select = true }),
 }),
 sources = cmp.config.sources({
+  { name = 'nvim_lsp' },
   { name = 'vsnip' }, -- For vsnip users.
   -- { name = 'luasnip' }, -- For luasnip users.
   -- { name = 'ultisnips' }, -- For ultisnips users.
@@ -350,8 +386,18 @@ sources = cmp.config.sources({
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 require('lspconfig')['rust-analyzer'].setup {
-capabilities = capabilities
+    capabilities = capabilities,
+    on_attach = on_attach
 }
+require('lspconfig')['tsserver'].setup {
+    capabilities = capabilities,
+    on_attach = on_attach
+}
+require('lspconfig')['pyright'].setup {
+    capabilities = capabilities,
+    on_attach = on_attach
+}
+
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
